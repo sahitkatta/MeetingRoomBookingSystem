@@ -1,7 +1,9 @@
 package service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
+import constants.Status;
 import dao.UserDao;
 import entity.MeetingRequest;
 import entity.MeetingRoom;
@@ -49,6 +51,9 @@ public class UserService {
 	public ArrayList<Resource> getResourceList() {
 		
 		return userDao.getResourceList();
+	}
+	public void cancelBulkRequests(MeetingRequest request,LocalDate startDate, LocalDate endDate) {
+		userDao.cancelBulkRequests(request, startDate, endDate);
 	}
 
 	

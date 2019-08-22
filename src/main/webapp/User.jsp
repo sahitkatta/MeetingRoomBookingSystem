@@ -57,19 +57,19 @@ a:active {
 }
 
 table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
 }
 
 td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
 }
 
 tr:nth-child(even) {
-  background-color: #dddddd;
+	background-color: #dddddd;
 }
 </style>
 </head>
@@ -91,9 +91,10 @@ tr:nth-child(even) {
 		</h1>
 	</div>
 	<div class="menu">
-		<!-- <a href="User.jsp?operation=request">Request a Slot</a><br> --> <a
-			href="User.jsp?operation=requests">Request Slot(s)</a><br><a
-			href="User?operation=view">View Requested Slot</a><br> <a
+		<!-- <a href="User.jsp?operation=request">Request a Slot</a><br> -->
+		<a href="User.jsp?operation=requests">Request Slot(s)</a><br>
+		<a href="User.jsp?operation=cancelBulkRequests">Cancel Slot(s)</a><br>
+		<a href="User?operation=view">View Requested Slot</a><br> <a
 			href="User?operation=history">Request History</a><br> <br>
 		<a href="index.jsp">LOGOUT</a>
 	</div>
@@ -108,28 +109,26 @@ tr:nth-child(even) {
 		<form action="User?operation=request" method="post">
 			Date: <input type="date" name="date" id="date"
 				value="<%=LocalDate.now().toString()%>"><br> Start
-			Time: <input type="time" name="startTime"><br> End
-			Time:<input type="time" name="endTime"><br> 
-			<select name="meetingRoomNumber">
+			Time: <input type="time" name="startTime"><br> End Time:<input
+				type="time" name="endTime"><br> <select
+				name="meetingRoomNumber">
 				<%
 				for(MeetingRoom room: meetingRoomList){
 					%>
-					<option value="<%=room.getId() %>"><%= room.getMeetingRoomName() %></option>
-					<%
+				<option value="<%=room.getId() %>"><%= room.getMeetingRoomName() %></option>
+				<%
 				}
 				%>
-				
-			</select> <br> 
-			<select name="resource">
+
+			</select> <br> <select name="resource">
 				<%
 				for(Resource resource: resourceList){
 				%>
-					<option value="<%=resource.getId() %>"><%= resource.getResourceName() %></option>
+				<option value="<%=resource.getId() %>"><%= resource.getResourceName() %></option>
 				<%
 				}
 				%>
-			</select><br> <br> 
-			<input type="submit">
+			</select><br> <br> <input type="submit">
 		</form>
 
 
@@ -141,28 +140,26 @@ tr:nth-child(even) {
 				value="<%=LocalDate.now().toString()%>"><br> End Date:
 			<input type="date" name="endDate"
 				value="<%=LocalDate.now().toString()%>"> <br> Start
-			Time: <input type="time" name="startTime"><br> End
-			Time:<input type="time" name="endTime"><br> 
-			<select name="meetingRoomNumber">
+			Time: <input type="time" name="startTime"><br> End Time:<input
+				type="time" name="endTime"><br> <select
+				name="meetingRoomNumber">
 				<%
 				for(MeetingRoom room: meetingRoomList){
 					%>
-					<option value="<%=room.getId() %>"><%= room.getMeetingRoomName() %></option>
-					<%
+				<option value="<%=room.getId() %>"><%= room.getMeetingRoomName() %></option>
+				<%
 				}
 				%>
-				
-			</select> <br> 
-			<select name="resource">
+
+			</select> <br> <select name="resource">
 				<%
 				for(Resource resource: resourceList){
 					%>
-					<option value="<%=resource.getId() %>"><%= resource.getResourceName() %></option>
-					<%
+				<option value="<%=resource.getId() %>"><%= resource.getResourceName() %></option>
+				<%
 				}
 				%>
-			</select><br> <br>
-			<input type="submit">
+			</select><br> <br> <input type="submit">
 		</form>
 
 		<%
@@ -229,13 +226,43 @@ tr:nth-child(even) {
 				<td><%=req.getEndTime()%></td>
 				<td><%=req.getUser().getUsername()%></td>
 				<td><%=req.getMeetingRoom().getMeetingRoomName()%></td>
-				<td><%=req.getResource().getResourceName()%> </td>
+				<td><%=req.getResource().getResourceName()%></td>
 				<td><%=req.getStatus()%></td>
 			</tr>
 			<%
 				}
 			%>
 		</table>
+		<%
+			}else if(operation.equals("cancelBulkRequests")){
+				%>
+		<form action="User?operation=cancelBulkRequests" method="post">
+			Start Date: <input type="date" name="startDate" id="date"
+				value="<%=LocalDate.now().toString()%>"><br>End Date: <input
+				type="date" name="endDate" id="date"
+				value="<%=LocalDate.now().toString()%>"><br> Start
+			Time: <input type="time" name="startTime"><br> End Time:<input
+				type="time" name="endTime"><br> <select
+				name="meetingRoomNumber">
+				<%
+				for(MeetingRoom room: meetingRoomList){
+					%>
+				<option value="<%=room.getId() %>"><%= room.getMeetingRoomName() %></option>
+				<%
+				}
+				%>
+
+			</select> <br> <select name="resource">
+				<%
+				for(Resource resource: resourceList){
+				%>
+				<option value="<%=resource.getId() %>"><%= resource.getResourceName() %></option>
+				<%
+				}
+				%>
+			</select><br> <br> <input type="submit">
+		</form>
+
 		<%
 			}
 
@@ -244,5 +271,5 @@ tr:nth-child(even) {
 
 
 	</div>
-	</body>
+</body>
 </html>

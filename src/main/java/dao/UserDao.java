@@ -1,8 +1,10 @@
 package dao;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import constants.Status;
 import entity.MeetingRequest;
@@ -18,7 +20,7 @@ public class UserDao implements IUserDao {
 	private String SQLgetResourceList ="SELECT resource FROM entity.Resource resource";
 	@Override
 	public ArrayList<MeetingRequest> getAllRequest(String username) {
-		
+
 		return new ArrayList<MeetingRequest>(entityManager.createQuery(SQLgetAllRequest).setParameter("username", username).getResultList());
 	}
 
@@ -52,21 +54,36 @@ public class UserDao implements IUserDao {
 
 	@Override
 	public ArrayList<MeetingRequest> getPastHistory(String username) {
-		
+
 		return new ArrayList<MeetingRequest>(entityManager.createQuery(SQLgetPastHistory).setParameter("username", username).getResultList());
 	}
 
 	@Override
 	public ArrayList<MeetingRoom> getMeetingRoomList() {
-		
+
 		return new ArrayList<MeetingRoom>(entityManager.createQuery(SQLgetMeetingRoomList).getResultList());
 	}
 
 	@Override
 	public ArrayList<Resource> getResourceList() {
-		
+
 		return new ArrayList<Resource>(entityManager.createQuery(SQLgetResourceList).getResultList());
 	}
-	
+
+	@Override
+	public void cancelBulkRequests(MeetingRequest request,LocalDate startDate, LocalDate endDate) {
+		
+			String updateQuery = "UPDATE entity.MeetingRequest as r SET r.status='"+Status.CANCEL+"' WHERE r.date between :startDate and :endDate AND (r.meetingRoom.meetingRoomName = :meetingRoomName) and (r.resource.resourceName = :resourceName)  and( r.user.username= :username) and (r.startTime =:startTime) and (r.endTime = :endTime)";
+			String selectQuery = "SELECT r from entity.MeetingRequest as r WHERE r.date between :startDate and :endDate AND (r.meetingRoom.meetingRoomName = :meetingRoomName) and (r.resource.resourceName = :resourceName)  and( r.user.username= :username) and (r.startTime =:startTime) and (r.endTime = :endTime)";
+			Query query = entityManager.createQuery(selectQuery).setParameter("meetingRoomName", request.getMeetingRoom().getMeetingRoomName()).setParameter("resourceName", request.getResource().getResourceName()).setParameter("startTime", request.getStartTime()).setParameter("endTime", request.getEndTime())
+					.setParameter("username", request.getUser().getUsername()).setParameter("startDate", startDate).setParameter("endDate", endDate);
+			entityManager.getTransaction().begin();
+			for(MeetingRequest req: new ArrayList<MeetingRequest>(query.getResultList())) {
+				req.setStatus(Status.CANCEL);
+				entityManager.persist(req);
+			}
+			entityManager.getTransaction().commit();
+		
+	}
 
 }

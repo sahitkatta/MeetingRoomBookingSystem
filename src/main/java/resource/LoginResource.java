@@ -14,7 +14,6 @@ public class LoginResource {
 	@Path("login")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Login authenticate(Login user) {
-		System.out.println("username is: "+user.getUsername()+", password is: "+user.getPassword());
 		LoginService service = new LoginService();
 		user.setRole(service.authenticate(user.getUsername(), user.getPassword()));
 		return user;

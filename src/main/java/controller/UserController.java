@@ -115,6 +115,19 @@ public class UserController extends HttpServlet {
 				dispatcher = request.getRequestDispatcher("User.jsp?operation=history");
 				dispatcher.forward(request, response);
 				break;
+			case "cancelBulkRequests":
+				meetingRequest = new MeetingRequest();
+				meetingRequest.setEndTime(LocalTime.parse(request.getParameter("endTime"), timeFormatter));
+				meetingRequest.setResource(UserController.getResource(Integer.parseInt(request.getParameter("resource")), resourceList));
+				meetingRequest.setStartTime(LocalTime.parse(request.getParameter("startTime"), timeFormatter));
+				meetingRequest.setUser(user);
+				meetingRequest.setMeetingRoom(UserController.getMeetingRoom(Integer.parseInt(request.getParameter("meetingRoomNumber")), meetingRoomList));
+				webTarget = client.target(apiURL).path("cancelBulkRequests/"+request.getParameter("startDate")+"/"+request.getParameter("endDate"));
+				invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+				clientResponse = invocationBuilder.put(Entity.entity(meetingRequest, MediaType.APPLICATION_JSON));
+				dispatcher = request.getRequestDispatcher("User?operation=view");
+				dispatcher.forward(request, response);
+				break;
 			}
 
 		}

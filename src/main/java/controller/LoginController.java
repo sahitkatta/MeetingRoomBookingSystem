@@ -54,12 +54,11 @@ public class LoginController extends HttpServlet {
 		user = clientResponse.readEntity(Login.class);
 
 		role = user.getRole();
-		System.out.println("role: "+role+";");
 		client = ClientBuilder.newClient( new ClientConfig() );
 
 		apiURL = "http://localhost:8080/MRBS/webapi/user";
 		webTarget = client.target(apiURL).path("getMeetingRoomList");
-		invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);//
+		invocationBuilder =  webTarget.request(MediaType.APPLICATION_JSON);
 		clientResponse = invocationBuilder.get();
 		GenericType<ArrayList<MeetingRoom>> meetingRoomListType = new GenericType<ArrayList<MeetingRoom>>(){};
 		ArrayList<MeetingRoom> meetingRoomList = clientResponse.readEntity(meetingRoomListType);

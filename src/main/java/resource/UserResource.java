@@ -1,5 +1,7 @@
 package resource;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.ws.rs.GET;
@@ -71,6 +73,14 @@ public class UserResource {
 	public MeetingRequest cancelRequest(MeetingRequest request) {
 		
 		return userService.cancelRequest(request.getRequestId());
+	}
+	
+	@Path("cancelBulkRequests/{startDate}/{endDate}")
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	public void cancelBulkRequests(MeetingRequest request,@PathParam("startDate") String startDate,@PathParam("endDate") String endDate) {
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		userService.cancelBulkRequests(request, LocalDate.parse(startDate, dateFormatter), LocalDate.parse(endDate, dateFormatter));
 	}
 
 	
